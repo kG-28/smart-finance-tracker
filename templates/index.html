@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">💸 Smart Finance Tracker</div>
+        <form class="search-bar" method="GET" action="/">
+            <input type="text" name="q" placeholder="Search..." value="{{ query }}">
+            <button type="submit">🔍</button>
+        </form>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <h2>Add New Expense</h2>
+            <form method="POST" class="expense-form">
+                <input type="text" name="description" placeholder="Description" required>
+                <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+                <input type="date" name="date">
+                <button type="submit">➕ Add</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>📊 Summary by Category</h2>
+            <ul class="summary">
+                {% for category, total in summary.items() %}
+                <li><span>{{ category }}</span><span>₹{{ "%.2f"|format(total) }}</span></li>
+                {% endfor %}
+            </ul>
+            <canvas id="categoryChart"></canvas>
+        </section>
+
+        <section class="card">
+            <h2>📅 Expense History</h2>
+            <ul class="history">
+                {% for expense in expenses %}
+                <li>
+                    <div>
+                        <strong>{{ expense.date }}</strong> - {{ expense.description }}
+                    </div>
+                    <div>
+                        ₹{{ expense.amount }}<br>
+                        <small>{{ expense.category }}</small>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made with ❤️ by Khushi | Final Year Project</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {{ summary.keys()|list|tojson }},
+                datasets: [{
+                    label: 'Expense by Category',
+                    data: {{ summary.values()|list|tojson }},
+                    backgroundColor: ['#7F7FD5', '#91EAE4', '#86A8E7', '#f9a825', '#ef5350', '#66bb6a'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="welcome-banner">
+        <h2>Welcome, {{ session['username'] }} 👋</h2>
+        <p>Manage your finances smartly and efficiently.</p>
+    </div>
+
+    <div class="quick-actions">
+        <a href="{{ url_for('add_expense') }}" class="card">
+            <h3>Add Expense</h3>
+            <p>Log your daily expenses</p>
+        </a>
+        <a href="{{ url_for('view_expenses') }}" class="card">
+            <h3>Expense History</h3>
+            <p>Check and manage your records</p>
+        </a>
+        <a href="{{ url_for('charts') }}" class="card">
+            <h3>Visual Summary</h3>
+            <p>Pie chart and statistics</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
